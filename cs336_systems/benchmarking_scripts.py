@@ -9,11 +9,11 @@ from cs336_basics.train import build_model, build_optimizer, cross_entropy, buil
 def parse_arg() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--vocab_size", type=int, default=10000)
-    parser.add_argument("--context-length", type=int, default=256)
-    parser.add_argument("--d_model", type=int, default=256)
-    parser.add_argument("--num_layers", type=int, default=6)
-    parser.add_argument("--num_heads", type=int, default=8)
-    parser.add_argument("--d_ff", type=int, default=1376)
+    parser.add_argument("--context-length", type=int, default=512)
+    parser.add_argument("--d_model", type=int, default=768)
+    parser.add_argument("--num_layers", type=int, default=12)
+    parser.add_argument("--num_heads", type=int, default=12)
+    parser.add_argument("--d_ff", type=int, default=3072)
     parser.add_argument("--rope_theta", type=float, default=10000.0)
     
     ## Optimizer
@@ -150,9 +150,9 @@ def benchmarking(args: argparse.Namespace):
         f"Warm-up={warmup_steps}; measurements per stage=10"
     )
     fig.tight_layout()
-    fig.savefig("../figures/p1_benchmark_times.png", dpi=200)
+    fig.savefig("./figures/small_benchmark_times.png", dpi=200)
     plt.close(fig)
-    print("Saved plot to ../figures/p1_benchmark_times.png")
+    print("Saved plot to ./figures/small_benchmark_times.png")
     
     
     
