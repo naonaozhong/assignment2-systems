@@ -18,8 +18,8 @@ class RotaryPositionalEmbedding(nn.Module):
         k = torch.arange(self.d_k // 2, device=self.device, dtype=torch.float32)
         denom = self.theta ** ((2 * k) / self.d_k) # 0-indexed
         angles = i[:, None] / denom[None, :]
-        self.para = torch.stack([torch.cos(angles), torch.sin(angles)], dim = -1)
-        self.register_buffer("rotate", self.para, persistent=False)
+        self.register_buffer("rotate", torch.stack([torch.cos(angles), torch.sin(angles)], dim = -1), persistent=False)
+        self.rotate: torch.Tensor
         
     def forward(self, x: torch.Tensor, token_positions: torch.Tensor) -> torch.Tensor:
         """ Process an input tensor of shape (..., seq_len, d_k) and return a tensor of the same shape. 
@@ -27,7 +27,7 @@ class RotaryPositionalEmbedding(nn.Module):
         
         x_reshape = rearrange(x, "... seq_len (d_k_half b) -> ... seq_len d_k_half b", b=2)
         
-        R = self.para[token_positions] # shape(..., d_k/2, 2)
+        R = self.rotate[token_positions] # shape(..., d_k/2, 2)
         
         x2k_1 = x_reshape[..., 0]
         x2k = x_reshape[..., 1]
